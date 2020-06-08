@@ -5,8 +5,4 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Model_Gry\Model_Gry.csproj" />
-  </ItemGroup>
-
 </Project>
