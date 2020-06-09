@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
@@ -8,106 +10,122 @@ namespace Model_Gry
 {   
     public class ModelGry
     {
-        public int liczbaWylosowana;
         public int ileCyfr = 4;
         public int[] cyfry;
-        public bool flaga = true;
+        
+        Random random = new Random();
+        List<int> wylosowane;
+        int min;
+        int max;
+
         
         public ModelGry(int min, int max)
-        {   
-            
+        {
             if (min < 0 || max < 0)
-                Console.WriteLine("Proszę podać liczby nieujemne");
-
-
+                throw new ArgumentException("liczby nie mogą być ujemne");
             if (min > max)
                 throw new ArgumentException("zły przedział do losowania");
-            
-            cyfry = new int[ileCyfr];
+
+            this.min = min;
+            this.max = max;
+  
+        }
+        public void Losuj()
+        {
+            wylosowane = new List<int>();
             for (int i = 0; i < ileCyfr; i++)
             {
-                liczbaWylosowana = (new Random()).Next(min, max + 1);
-                cyfry[i] = liczbaWylosowana;
+
+                wylosowane.Add(random.Next(min, max + 1));
 
             }
-            for(int j = 0; j < cyfry.Length; j++)
-            {
-                Console.Write($"{cyfry[j]} ");
-            }
-            Console.WriteLine();
-            
 
-            
         }
-        public void Przerwa()
+        public IReadOnlyList<int> Wylosowane()
         {
-            for (int i = 0; i < 20; i++)
-            {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.Write(' ');
-                Thread.Sleep(100);
-
-            }
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.Clear();
+            return wylosowane.AsReadOnly();
         }
-
-
-
-        public Odpowiedz Propozycja(int[] propzycja)
+        int buffor = 2;
+        int bufforCzasu = 2;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="OdpowiedzUzytkownika"></param>
+        /// <returns></returns>
+        public StanGry stangry;
+        
+        public bool Sprawdzenie(int[] OdpowiedzUzytkownika)
         {
-            Odpowiedz odp;
-            if (cyfry.Length != propzycja.Length)
-                throw new ArgumentException("Podano błędne cyfry");
-            for(int i = 0; i < cyfry.Length; i++)
+            if(wylosowane.Count != OdpowiedzUzytkownika.Length)
             {
-                if(cyfry[i] == propzycja[i])
-                {
-                    flaga = true;
-                }
-                else
-                {
-                    flaga = false;
-                    break;
-                }
+                stangry = StanGry.przegrana;
+                return false;
+                
             }
-            if (flaga)
+
+            for(int i = 0; i < wylosowane.Count; i++)
             {
-                odp = Odpowiedz.dobrze;
+                if (wylosowane[i] != OdpowiedzUzytkownika[i])
+                {
+                    stangry = StanGry.przegrana;
+                    return false;
+                }
+                    
+            }
+            if (buffor == 0)
+            {
+                ileCyfr++;
+                buffor = 2;
             }
             else
             {
-                odp = Odpowiedz.źle;
+                buffor--;
             }
-            return odp;
-
-
-
+            stangry = StanGry.wTrakcie;
+            
+            if(ileCyfr == 6)
+            {
+                stangry = StanGry.wygrana;
+            }
+            return true;
         }
-        //public void wynikGry(Odpowiedz odp)
-        //{
-        //    if(odp == -1)
-        //    {
+        int czasMs = 200;
+        public void Przerwa(Action postep)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                postep();
+                Thread.Sleep(czasMs);
+            }
+            if(bufforCzasu == 0)
+            {
+                bufforCzasu = 2;
+                czasMs -= 10;
 
-        //    }
-        //}
+            }
+            else
+            {
+                bufforCzasu--;
+            }
+        }
+        
+
+
         public enum StanGry
         {
             wTrakcie,
             przegrana,
+            wygrana
 
 
 
         }
 
-        public enum Odpowiedz
-        {
-            źle = -1,
-            dobrze = 1
-        }
+        
 
 
     }
+    
     
     class Program
     {
