@@ -1,5 +1,7 @@
-﻿using Model_Gry;
+﻿using Microsoft.VisualBasic;
+using Model_Gry;
 using System;
+using System.Linq;
 
 namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
 {
@@ -7,36 +9,33 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Wybierz wersję gry:");
-            Console.WriteLine("1 - zapamiętaj liczby");
-            Console.WriteLine("2 - zapamiętaj liczby w odwrotnej kolejności");
-            string wersjaGry;
+            
+            
 
             while (true)
             {
 
-
-                wersjaGry = Console.ReadLine();
+                PrintAction();
+                string wersjaGry = Console.ReadLine();
 
                 if (wersjaGry == "1")
                 {
+
                     while (true)
                     {
-
                         Console.WriteLine("Witaj w grze - zapamiętaj liczby");
                         Console.Write("Podaj przedział losowania oddzielony spacją ");
-                        string[] dane = Console.ReadLine().Split(' ');
-
-                        int[] przedzial = Array.ConvertAll(dane, int.Parse);
-                        //if(przedzial.Length != 2)
-                        //{
-                        //    Console.WriteLine("Podaj przedział");
-                        //    return;
-                        //}
-
+                        
 
                         try
                         {
+                            string[] dane = Console.ReadLine().Split(' ');
+                            int[] przedzial = Array.ConvertAll(dane, int.Parse);
+                            if (przedzial.Length != 2)
+                            {
+                                throw new IndexOutOfRangeException();
+                            }
+
                             ModelGry gra = new ModelGry(przedzial[0], przedzial[1]);
                             gra.Losuj();
                             Console.WriteLine("Zapamiętaj w czasie wylosowane poniżej liczby, a następnie przepisz je");
@@ -53,23 +52,36 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                                 gra.Przerwa(Przerwa);
                                 Console.Clear();
                                 Console.WriteLine("Przepisz liczby w kolejności");
-                                string[] odpowiedz = Console.ReadLine().Split(' ');
-                                int[] odp = Array.ConvertAll(odpowiedz, int.Parse);
+                                
+                                try
+                                {
+                                    string[] odpowiedz = Console.ReadLine().Split(' ');
+                                    int[] odp = Array.ConvertAll(odpowiedz, int.Parse);
+                                    if (gra.Sprawdzenie(odp))
+                                    {
+                                        Console.WriteLine("Odpowiedziano poprawnie.");
+                                        Console.WriteLine($"Status gry: {gra.stangry}");
+                                        gra.Losuj();
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Odpowiedziano źle.");
+                                        Console.WriteLine("Gra zakończona.");
+                                        Console.WriteLine($"Status gry: {gra.stangry}");
 
-                                if (gra.Sprawdzenie(odp))
-                                {
-                                    Console.WriteLine("Odpowiedziano poprawnie.");
-                                    Console.WriteLine($"Status gry: {gra.stangry}");
-                                    gra.Losuj();
+                                        break;
+                                    }
                                 }
-                                else
+                                catch (Exception)
                                 {
-                                    Console.WriteLine("Odpowiedziano źle.");
+                                    Console.WriteLine("Odpowiedziano źle. Nie wpisano liczb.");
                                     Console.WriteLine("Gra zakończona.");
                                     Console.WriteLine($"Status gry: {gra.stangry}");
 
-                                    return;
+                                    break;
+
                                 }
+                                
 
 
                             }
@@ -77,27 +89,46 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                             {
                                 Console.WriteLine("Gratulacje! Wygrałeś!");
 
-                                return;
                             }
+                            break;
+                        }
+                        catch (IndexOutOfRangeException)
+                        {
+                            Console.WriteLine("Przedział losowania musi składać się z dwóch liczb!");
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Przedział musi składać się z liczb!");
                         }
                         catch (ArgumentException e)
                         {
                             Console.WriteLine(e.Message);
                         }
+                        //catch (Exception)
+                        //{
+                        //    Console.WriteLine("Zły przedział losowania");
+                        //    //break;
+                        //}
+                        
                     }
                 }
                 else if (wersjaGry == "2")
                 {
                     Console.WriteLine("Jeszcze nad tym pracuje");
-                    break;
+                    
+                }
+                else if(wersjaGry == "0")
+                {
+                    Console.WriteLine("Zamykanie ...");
+                    Environment.Exit(0);
                 }
                 else
                 {
-                    Console.WriteLine("Proszę wpisać 1 lub 2");
+                    Console.WriteLine("Proszę wpisać 0, 1 lub 2");
                 }
 
-
             }
+            
             void Przerwa()
             {
                 Console.BackgroundColor = ConsoleColor.Red;
@@ -106,6 +137,13 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                 Console.ResetColor();
             }
 
+        }
+        private static void PrintAction()
+        {
+            Console.WriteLine("Wybierz wersję gry:");
+            Console.WriteLine("0 - wyjście");
+            Console.WriteLine("1 - zapamiętaj liczby");
+            Console.WriteLine("2 - zapamiętaj liczby w odwrotnej kolejności");
         }
 
     }

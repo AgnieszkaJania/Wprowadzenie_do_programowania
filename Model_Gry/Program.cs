@@ -15,6 +15,7 @@ namespace Model_Gry
         
         Random random = new Random();
         List<int> wylosowane;
+        
         int min;
         int max;
 
@@ -22,9 +23,9 @@ namespace Model_Gry
         public ModelGry(int min, int max)
         {
             if (min < 0 || max < 0)
-                throw new ArgumentException("liczby nie mogą być ujemne");
+                throw new ArgumentException("Liczby nie mogą być ujemne!");
             if (min > max)
-                throw new ArgumentException("zły przedział do losowania");
+                throw new ArgumentException("Zły przedział do losowania: pierwsza liczba musi być mniejsza od drugiej.");
 
             this.min = min;
             this.max = max;
@@ -41,10 +42,13 @@ namespace Model_Gry
             }
 
         }
+        
+        
         public IReadOnlyList<int> Wylosowane()
         {
             return wylosowane.AsReadOnly();
         }
+        
         int buffor = 2;
         int bufforCzasu = 2;
         /// <summary>
@@ -52,7 +56,7 @@ namespace Model_Gry
         /// </summary>
         /// <param name="OdpowiedzUzytkownika"></param>
         /// <returns></returns>
-        public StanGry stangry;
+        public StanGry stangry= StanGry.przegrana;
         
         public bool Sprawdzenie(int[] OdpowiedzUzytkownika)
         {
@@ -84,6 +88,43 @@ namespace Model_Gry
             stangry = StanGry.wTrakcie;
             
             if(ileCyfr == 6)
+            {
+                stangry = StanGry.wygrana;
+            }
+            return true;
+        }
+        //funkcja sprawdzania odwrotności
+        public bool SprawdzenieOdwr(int[] OdpowiedzUzytkownika)
+        {
+            wylosowane.Reverse();
+            if (wylosowane.Count != OdpowiedzUzytkownika.Length)
+            {
+                stangry = StanGry.przegrana;
+                return false;
+
+            }
+
+            for (int i = 0; i < wylosowane.Count; i++)
+            {
+                if (wylosowane[i] != OdpowiedzUzytkownika[i])
+                {
+                    stangry = StanGry.przegrana;
+                    return false;
+                }
+
+            }
+            if (buffor == 0)
+            {
+                ileCyfr++;
+                buffor = 2;
+            }
+            else
+            {
+                buffor--;
+            }
+            stangry = StanGry.wTrakcie;
+
+            if (ileCyfr == 6)
             {
                 stangry = StanGry.wygrana;
             }
@@ -125,8 +166,6 @@ namespace Model_Gry
 
 
     }
-    
-    
     class Program
     {
         static void Main(string[] args)
