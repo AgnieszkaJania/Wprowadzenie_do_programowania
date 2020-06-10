@@ -93,44 +93,8 @@ namespace Model_Gry
             }
             return true;
         }
-        //funkcja sprawdzania odwrotności
-        public bool SprawdzenieOdwr(int[] OdpowiedzUzytkownika)
-        {
-            wylosowane.Reverse();
-            if (wylosowane.Count != OdpowiedzUzytkownika.Length)
-            {
-                stangry = StanGry.przegrana;
-                return false;
-
-            }
-
-            for (int i = 0; i < wylosowane.Count; i++)
-            {
-                if (wylosowane[i] != OdpowiedzUzytkownika[i])
-                {
-                    stangry = StanGry.przegrana;
-                    return false;
-                }
-
-            }
-            if (buffor == 0)
-            {
-                ileCyfr++;
-                buffor = 2;
-            }
-            else
-            {
-                buffor--;
-            }
-            stangry = StanGry.wTrakcie;
-
-            if (ileCyfr == 6)
-            {
-                stangry = StanGry.wygrana;
-            }
-            return true;
-        }
-        int czasMs = 200;
+        
+        public int czasMs = 200;
         public void Przerwa(Action postep)
         {
             for (int i = 0; i < 20; i++)
@@ -165,6 +129,106 @@ namespace Model_Gry
         
 
 
+    }
+    public class ModelGryIleDodac
+    {
+        readonly Random Suma = new Random();
+        Random Odejmowana = new Random();
+        int Liczba;
+        public int LiczbaOdejmowana;
+        int roznica;
+        List<int> wylosowaneLiczby;
+
+        //public ModelGryIleDodac()
+        //{
+            
+
+
+
+        //}
+        public void LosujLiczbe()
+        {
+            wylosowaneLiczby = new List<int>();
+            Liczba = Suma.Next(0, 101);
+            LiczbaOdejmowana = Odejmowana.Next(0, Liczba);
+            roznica = Liczba - LiczbaOdejmowana;
+            wylosowaneLiczby.Add(Liczba);
+            wylosowaneLiczby.Add(roznica);
+        }
+        
+        public IReadOnlyList<int> WylosowaneLiczby()
+        {
+            return wylosowaneLiczby.AsReadOnly();
+        }
+        public int czasMs = 400;
+        public int buffor = 2;
+        public int punkty = 0;
+        public void CzasNaOdp(Action postep)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                postep();
+                Thread.Sleep(czasMs);
+            }
+            if(czasMs > 150)
+            {
+                if (buffor == 0)
+                {
+                    buffor = 2;
+                    czasMs -= 50;
+                }
+                else
+                {
+                    buffor--;
+                }
+            }
+        }
+        public StanGryIle stan = StanGryIle.zakończona;
+        public bool Weryfikacja(int odpowiedzUzytkownika)
+        {
+            if(odpowiedzUzytkownika == LiczbaOdejmowana)
+            {
+
+                switch (czasMs)
+                {
+                    case 400:
+                        punkty++;
+                        break;
+                    case 350:
+                        punkty += 2;
+                        break;
+                    case 300:
+                        punkty += 3;
+                        break;
+                    case 250:
+                        punkty += 4;
+                        break;
+                    case 200:
+                        punkty += 5;
+                        break;
+                    case 150:
+                        punkty += 10;
+                        break;
+
+
+
+                }
+                stan = StanGryIle.wTrakcie;
+                return true;
+            }
+            else
+            {
+                
+                stan = StanGryIle.zakończona;
+                return false;
+            }
+        }
+        public enum StanGryIle
+        {
+            wTrakcie,
+            zakończona
+        }
+        
     }
     class Program
     {

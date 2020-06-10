@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania", "Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania\Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania.csproj", "{A5DE1483-0721-4826-BECC-109325656668}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model_Gry", "Model_Gry\Model_Gry.csproj", "{DE9FCAF4-EAE4-4325-A519-E31713AB0BA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model_Gry", "Model_Gry\Model_Gry.csproj", "{DE9FCAF4-EAE4-4325-A519-E31713AB0BA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

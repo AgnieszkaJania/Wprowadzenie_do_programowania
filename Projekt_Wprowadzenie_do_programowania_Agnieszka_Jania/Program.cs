@@ -10,8 +10,6 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
         static void Main(string[] args)
         {
             
-            
-
             while (true)
             {
 
@@ -61,6 +59,7 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                                     {
                                         Console.WriteLine("Odpowiedziano poprawnie.");
                                         Console.WriteLine($"Status gry: {gra.stangry}");
+                                        //Console.WriteLine(gra.czasMs);
                                         gra.Losuj();
                                     }
                                     else
@@ -114,8 +113,56 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                 }
                 else if (wersjaGry == "2")
                 {
-                    Console.WriteLine("Jeszcze nad tym pracuje");
-                    
+                    PrintAction1();
+                    ModelGryIleDodac graIle = new ModelGryIleDodac();
+                    graIle.LosujLiczbe();
+
+                    while (true)
+                    {
+
+                        Console.WriteLine("Ile należy dodać do drugiej liczby, aby otrzymać pierwszą?");
+                        foreach (var abc in graIle.WylosowaneLiczby())
+                        {
+                            Console.Write(abc);
+                            Console.Write(" ");
+
+                        }
+                        
+                        Console.WriteLine();
+                        graIle.CzasNaOdp(Przerwa);
+                        Console.Clear();
+                        Console.WriteLine("Wpisz wynik:");
+                        try
+                        {
+                            int odpowiedz = int.Parse(Console.ReadLine());
+                            if (graIle.Weryfikacja(odpowiedz))
+                            {
+                                Console.WriteLine("Dobra odpowiedź !");
+                                Console.WriteLine($"Status gry: {graIle.stan}");
+                                Console.WriteLine($"{graIle.czasMs}   {graIle.punkty}  {graIle.buffor}");
+                                graIle.LosujLiczbe();
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("Zła odpowiedź !");
+                                Console.WriteLine("Gra zakończona.");
+                                Console.WriteLine($"Status gry: {graIle.stan}");
+                                Console.WriteLine($"Szukana liczba to: {graIle.LiczbaOdejmowana}");
+                                Console.WriteLine($"Zdobyłeś/aś {graIle.punkty} punktów.");
+                                break;
+                            }
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Należy podać jedną liczbę");
+                            Console.WriteLine("Gra zakończona.");
+                            Console.WriteLine($"Status gry: {graIle.stan}");
+                            break;
+
+                        }
+                    }
+
                 }
                 else if(wersjaGry == "0")
                 {
@@ -140,11 +187,19 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
         }
         private static void PrintAction()
         {
+            Console.WriteLine("Witaj !");
             Console.WriteLine("Wybierz wersję gry:");
             Console.WriteLine("0 - wyjście");
             Console.WriteLine("1 - zapamiętaj liczby");
-            Console.WriteLine("2 - zapamiętaj liczby w odwrotnej kolejności");
+            Console.WriteLine("2 - ile dodać?");
         }
+        private static void PrintAction1()
+        {
+            Console.WriteLine("Witamy w grze - ile dodać");
+            Console.WriteLine("Zostaną wyświetlone dwie liczby. Musisz ustalić ile należy dodać do drugiej liczby, aby otrzymać pierwszą.");
+            Console.ReadKey();
+        }
+
 
     }
 }
