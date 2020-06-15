@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Model_Gry\Model_Gry.csproj" />
+    <ProjectReference Include="..\ModelGry\ModelGry.csproj" />
   </ItemGroup>
 
 </Project>

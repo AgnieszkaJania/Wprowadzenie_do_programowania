@@ -15,16 +15,12 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
 
                 PrintAction();
                 string wersjaGry = Console.ReadLine();
+                Console.Clear();
 
                 if (wersjaGry == "1")
                 {
-
-                    while (true)
-                    {
-                        Console.WriteLine("Witaj w grze - zapamiętaj liczby");
-                        Console.Write("Podaj przedział losowania oddzielony spacją ");
-                        
-
+                        PrintAction2();
+                    
                         try
                         {
                             string[] dane = Console.ReadLine().Split(' ');
@@ -36,11 +32,11 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
 
                             ModelGry gra = new ModelGry(przedzial[0], przedzial[1]);
                             gra.Losuj();
-                            Console.WriteLine("Zapamiętaj w czasie wylosowane poniżej liczby, a następnie przepisz je");
+                            
 
                             while (gra.ileCyfr < 6)
                             {
-
+                                Console.WriteLine("Zapamiętaj w czasie wylosowane poniżej liczby, a następnie przepisz je.");
                                 foreach (var tmp in gra.Wylosowane())
                                 {
                                     Console.Write(tmp);
@@ -49,7 +45,7 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                                 Console.WriteLine();
                                 gra.Przerwa(Przerwa);
                                 Console.Clear();
-                                Console.WriteLine("Przepisz liczby w kolejności");
+                                Console.WriteLine("Przepisz liczby w kolejności:");
                                 
                                 try
                                 {
@@ -59,7 +55,6 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                                     {
                                         Console.WriteLine("Odpowiedziano poprawnie.");
                                         Console.WriteLine($"Status gry: {gra.stangry}");
-                                        //Console.WriteLine(gra.czasMs);
                                         gra.Losuj();
                                     }
                                     else
@@ -67,7 +62,6 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                                         Console.WriteLine("Odpowiedziano źle.");
                                         Console.WriteLine("Gra zakończona.");
                                         Console.WriteLine($"Status gry: {gra.stangry}");
-
                                         break;
                                     }
                                 }
@@ -87,29 +81,29 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                             if (gra.ileCyfr == 6)
                             {
                                 Console.WriteLine("Gratulacje! Wygrałeś!");
+                                
 
                             }
-                            break;
+                            
                         }
                         catch (IndexOutOfRangeException)
                         {
+                            Console.Clear();
                             Console.WriteLine("Przedział losowania musi składać się z dwóch liczb!");
                         }
                         catch (FormatException)
                         {
+                            Console.Clear();
                             Console.WriteLine("Przedział musi składać się z liczb!");
                         }
                         catch (ArgumentException e)
                         {
+                            Console.Clear();
                             Console.WriteLine(e.Message);
                         }
-                        //catch (Exception)
-                        //{
-                        //    Console.WriteLine("Zły przedział losowania");
-                        //    //break;
-                        //}
+                    PrintAction3();
                         
-                    }
+                        
                 }
                 else if (wersjaGry == "2")
                 {
@@ -146,22 +140,26 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
                             else
                             {
                                 Console.WriteLine("Zła odpowiedź !");
-                                Console.WriteLine("Gra zakończona.");
+                               
                                 Console.WriteLine($"Status gry: {graIle.stan}");
                                 Console.WriteLine($"Szukana liczba to: {graIle.LiczbaOdejmowana}");
                                 Console.WriteLine($"Zdobyłeś/aś {graIle.punkty} punktów.");
+                                Console.WriteLine($"Przeszedłeś/przeszłaś {graIle.runda} rund.");
+                                
                                 break;
                             }
                         }
                         catch (FormatException)
                         {
                             Console.WriteLine("Należy podać jedną liczbę");
-                            Console.WriteLine("Gra zakończona.");
+                            
                             Console.WriteLine($"Status gry: {graIle.stan}");
                             break;
 
                         }
+                        
                     }
+                    PrintAction3();
 
                 }
                 else if(wersjaGry == "0")
@@ -196,9 +194,24 @@ namespace Projekt_Wprowadzenie_do_programowania_Agnieszka_Jania
         private static void PrintAction1()
         {
             Console.WriteLine("Witamy w grze - ile dodać");
-            Console.WriteLine("Zostaną wyświetlone dwie liczby. Musisz ustalić ile należy dodać do drugiej liczby, aby otrzymać pierwszą.");
+            Console.WriteLine("Zostaną wyświetlone dwie liczby i po pewnym czasie znikną. \nMusisz ustalić ile należy dodać do drugiej liczby, aby otrzymać pierwszą. \nNastępnie wpisz wynik.");
+            Console.WriteLine("Naciśnij dowolny klawisz, aby rozpocząć grę.");
             Console.ReadKey();
         }
+        private static void PrintAction2()
+        {
+            Console.WriteLine("Witaj w grze - zapamiętaj liczby");
+            Console.WriteLine("Zostanie wyświetlony ciąg liczb i po pewnym czasie zniknie. \nZapamiętaj ten ciąg liczb, a następnie przepisz go w takiej samej kolejności. ");
+            Console.Write("Podaj przedział losowania liczb oddzielony spacją, a następnie wciśnij enter. ");
+            Console.WriteLine();
+        }
+        private static void PrintAction3()
+        {
+            Console.WriteLine("Naciśnij dowolny klawisz, aby kontynuować.");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
 
 
     }
